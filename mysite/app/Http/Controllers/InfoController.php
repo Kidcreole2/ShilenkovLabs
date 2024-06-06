@@ -13,11 +13,8 @@ class InfoController extends Controller
         return json_encode($response);
     }
     public function client(){
-        // $user_agent = 123;
-        $ip = $_SERVER['REMOTE_ADDR'];
-        $user_agent = $_SERVER['HTTP_USER_AGENT'];
-        $response = ['ip'=> $ip];
-        $response += ['user agent:'=> $user_agent];
+        $response = ['ip'=> $_SERVER['REMOTE_ADDR']];
+        $response += ['user agent:'=> $_SERVER['HTTP_USER_AGENT']];
         return json_encode($response);
     }
     public function database(){
