@@ -6,11 +6,11 @@ Route::get('/', function () {
     return view('login');
 });
 
-Route::get('/login', function () {
+Route::match(['get','post'],'/login', function () {
     return view('login');
 });
 
-Route::get('/registration', function () {
+Route::match(['get','post'],'/registration', function () {
     return view('login');
 });
 
@@ -22,6 +22,6 @@ Route::get('/token/get', function () {
     return view('login');
 });
 
-// Route::get('/logout', function () {
-//     return view('login');
-// });
+Route::get('/logout', function () {
+    return view('login');
+});
