@@ -2,26 +2,15 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('login');
-});
+Route::match(['get','post'],'/registration',[\App\Http\Controllers\MainController::class, 'registration']);
 
-Route::match(['get','post'],'/login', function () {
-    return view('login');
-});
+Route::match(['get','post'],'/login',[\App\Http\Controllers\MainController::class, 'login']);
 
-Route::match(['get','post'],'/registration', function () {
-    return view('login');
-});
+Route::get('/logout',[\App\Http\Controllers\MainController::class, 'logout']);
 
-Route::get('/users/get', function () {
-    return view('login');
-});
+Route::get('/token/remove',[\App\Http\Controllers\MainController::class, 'tokens_remove']);
 
-Route::get('/token/get', function () {
-    return view('login');
-});
+Route::get('/token/get',[\App\Http\Controllers\MainController::class, 'tokens_get']);
 
-Route::get('/logout', function () {
-    return view('login');
-});
+Route::get('/',[\App\Http\Controllers\MainController::class, 'home']);
+    
