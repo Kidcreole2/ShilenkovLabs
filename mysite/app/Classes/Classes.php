@@ -7,14 +7,14 @@ use Illuminate\Support\Facades\Log;
 
 class SignInReq
 {
-    public function req_to_db($login){
-        return (DB::select('select * from users where login = ?', $login));
+    public function getInf($login,$password){
+        return (new SignInDTO($login,$password));
     }
 }
 class SignUpReq
 {
-    public function req_to_db($login){
-        return (DB::select('select * from users where login = ?', $login));
+    public function getInf($login,$password,$name){
+        return (new SignUpDTO($login,$password,$name));
     }
 }
 class SignInDTO
@@ -22,35 +22,39 @@ class SignInDTO
     public $login;
     public $password;
 
-    public function __construct($login) {
-        Log::notice("im in User SignIn Class");
-        $user = (new SignInReq())->req_to_db($login);
-        $this->login = $user['login'];
-        $this->password = $user['password'];
+    public function __construct($login,$password) {
+        $this->login = $login;
+        $this->password = $password;
     }
 }
 class SignUpDTO
 {
     public $login;
     public $password;
+    public $name;
 
-    public function __construct($login, $password) {
+    public function __construct($login, $password,$name) {
         Log::notice("im in User SignUp Class");
         $this->login = $login;
         $this->password = $password;
+        $this->name = $name;
     }
 }
 class UsersDTO
 {
-    public $name;
+    public $id;
     public $login;
     public $password;
+    public $name;
 
     public function __construct($login) {
         Log::notice("im in User Class");
-        $user = (new SignInReq())->req_to_db($login);
-        $this->login = $user['login'];
-        $this->password = $user['password'];
-        $this->name = $user['name'];
+        $user = DB::table('users')->where('login', $login)->first();
+        if ($user){
+            $this->id = $user->id;
+            $this->login = $user->login;
+            $this->password = $user->password;
+            $this->name = $user->name;
+        }
     }
 }
