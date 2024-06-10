@@ -2,15 +2,17 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::match(['get','post'],'/registration',[\App\Http\Controllers\MainController::class, 'registration']);
+/*
+|--------------------------------------------------------------------------
+| Web Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register web routes for your application. These
+| routes are loaded by the RouteServiceProvider and all of them will
+| be assigned to the "web" middleware group. Make something great!
+|
+*/
 
-Route::match(['get','post'],'/login',[\App\Http\Controllers\MainController::class, 'login']);
-
-Route::middleware('auth:sanctum')->get('/logout',[\App\Http\Controllers\MainController::class, 'logout']);
-
-Route::middleware('auth:sanctum')->get('/token/remove',[\App\Http\Controllers\MainController::class, 'tokens_remove']);
-
-Route::middleware('auth:sanctum')->get('/token/get',[\App\Http\Controllers\MainController::class, 'tokens_get']);
-
-Route::middleware('auth:sanctum')->get('/',[\App\Http\Controllers\MainController::class, 'home']);
-    
+Route::get('/', function () {
+    return view('welcome');
+});
