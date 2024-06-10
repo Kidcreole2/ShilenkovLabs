@@ -1,2 +1,1 @@
-// import './bootstrap';
-import '../../public/js/login';
+import './bootstrap';

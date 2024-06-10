@@ -11,15 +11,12 @@ use Laravel\Passport\Passport;
 use Laravel\Passport\Token;
 use App\DTO\UserDTO;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Log;
 
 class UserController extends Controller
 {
     public function auth(Auth $request)
     {
-        Log::info("auth");
         $userData = $request->createDTO();
-        Log::info($userData->username);
 
         $user = User::where('username', $userData->username)->first();
 
@@ -54,11 +51,9 @@ class UserController extends Controller
 
     public function registration(Registration $request)
     {
-        Log::info("reg");
 
         $userData = $request->createDTO();
 
-        Log::info($userData->username);
         $user = User::create([
             'username' => $userData->username,
             'email' => $userData->email,
