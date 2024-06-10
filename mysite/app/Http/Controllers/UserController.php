@@ -9,13 +9,17 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Passport\Passport;
 use Laravel\Passport\Token;
-use App\DTO\UsersDTO;
+use App\DTO\UserDTO;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class UserController extends Controller
 {
-    public function auth(Auth $request){
+    public function auth(Auth $request)
+    {
+        Log::info("auth");
         $userData = $request->createDTO();
+        Log::info($userData->username);
 
         $user = User::where('username', $userData->username)->first();
 
@@ -47,9 +51,14 @@ class UserController extends Controller
             "access_tocken" => $tokenResult->accessToken
         ], 200);
     }
-    public function registration(Registration $request){
+
+    public function registration(Registration $request)
+    {
+        Log::info("reg");
+
         $userData = $request->createDTO();
 
+        Log::info($userData->username);
         $user = User::create([
             'username' => $userData->username,
             'email' => $userData->email,
@@ -59,14 +68,26 @@ class UserController extends Controller
 
         return response()->json($user, 201);
     }
-    public function me(Request $request){
+
+    public function me(Request $request)
+    {
         $user = $request->user();
 
         return response()->json([
             "user" => $user
         ]);
     }
-    public function tokens(Request $request){
+
+    public function out(Request $request)
+    {
+        $request->user()->token()->revoke();
+        return response()->json([
+            'message' => 'Successfully logged out'
+        ]);
+    }
+
+    public function tokens(Request $request)
+    {
         $tokens = $request->user()->tokens;
 
         return response()->json(
@@ -75,18 +96,14 @@ class UserController extends Controller
             ]
         );
     }
-    public function outAll(Request $request){
+
+    public function outAll(Request $request)
+    {
         $userTokens = $request->user()->tokens;
         foreach ($userTokens as $token) {
             $token->revoke();
         }
 
         return response()->json(["All tokens is logout"], 200);
-    }
-    public function out(Request $request){
-        $request->user()->token()->revoke();
-        return response()->json([
-            'message' => 'Successfully logged out'
-        ]);
     }
 }

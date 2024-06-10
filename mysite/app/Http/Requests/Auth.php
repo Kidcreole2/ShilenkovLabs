@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\DTO\SignInDTO;
+use App\DTO\AuthDTO;
 use Illuminate\Foundation\Http\FormRequest;
 
 class Auth extends FormRequest
@@ -28,8 +28,8 @@ class Auth extends FormRequest
         ];
     }
 
-    public function createDTO() : SignInDTO {
-        return new SignInDTO(
+    public function createDTO() : AuthDTO {
+        return new AuthDTO(
             $this->input('username'),
             $this->input('password')
         );
