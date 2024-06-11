@@ -6,6 +6,7 @@
 
     class PermissionsCollectionDTO
     {
+        public $permissions;
         public function __construct($permissions)
         {
             $this->permissions = $permissions->map(function ($permission) {

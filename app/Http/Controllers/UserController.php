@@ -2,103 +2,61 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\Auth;
-use App\Http\Requests\Registration;
+use app\DTO\UserCollectionDTO;
+use App\Http\Requests\UserRequest;
+use App\Models\Role;
 use App\Models\User;
+use App\Models\UsersAndRoles;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Log;
-use Laravel\Passport\Sanctum;
-use Laravel\Passport\Token;
-use App\DTO\UserDTO;
-use Carbon\Carbon;
 
 class UserController extends Controller
 {
-    public function auth(Auth $request)
-    {
-        $userData = $request->createDTO();
-
-        $user = User::where('username', $userData->username)->first();
-
-        if (!$user || !Hash::check($userData->password, $user->password)) {
-            return response()->json(['error' => 'Unauthenticated.'], 401);
-        }
-
-        if (intval(env('MAX_ACTIVE_TOKENS')) <= 0) {
-            return response()->json([
-                'message' => 'change env MAX_ACTIVE_TOKENS'
-            ], 401);
-        }
-
-        $userActiveTokens = $user->tokens()->where('revoked', false);
-        $userTokenCount = $userActiveTokens->count();
-
-        while ($userTokenCount >= env('MAX_ACTIVE_TOKENS', 3)) {
-            $oldestToken = $userActiveTokens->orderBy('created_at', 'asc')->first();
-            $oldestToken->revoke();
-            $userTokenCount = $user->tokens()->where('revoked', false)->count();
-        }
-
-        $tokenResult = $user->createToken('Personal Access Token');
-        $token = $tokenResult->token;
-        $token->expires_at = Carbon::now()->addDays(env('TOKEN_EXPIRATION_DAYS', 15));
-        $token->save();
-
-        return response()->json([
-            "access_tocken" => $tokenResult->accessToken
-        ], 200);
+    public function getUsers(){
+        $users = new UserCollectionDTO();
+        return response()->json($users->users);
     }
+    public function getRoles(UserRequest $request){
+        $user_id = $request->id;
 
-    public function registration(Registration $request)
-    {
+        $roles_id = UsersAndRoles::select('role_id')->where('user_id', $user_id)->get();
 
-        $userData = $request->createDTO();
+    	$roles = $roles_id->map(function($id) {
+    		return Role::where('id', $id->role_id)->first();
+    	});
 
-        $user = User::create([
-            'username' => $userData->username,
-            'email' => $userData->email,
-            'password' => bcrypt($userData->password),
-            'birthday' => $userData->birthday
-        ]);
-
-        return response()->json($user, 201);
+    	return response()->json($roles);
     }
+    public function give(Request $request){
+        $user = UsersAndRoles::where('user_id', $request->id)->first();
+		$role = $request->role;
 
-    public function me(Request $request)
-    {
-        $user = $request->user();
-        return response()->json([
-            "user" => $user
-        ]);
+		$user->update([
+			'role_id' => $role,
+		]);
+		return response()->json(['status' => '200']);
     }
+    public function delete(Request $request){
+        $user_id = $request->id;
+		UsersAndRoles::where('user_id', $user_id)->forceDelete();
 
-    public function out(Request $request)
-    {
-        $request->user()->token()->revoke();
-        return response()->json([
-            'message' => 'Successfully logged out'
-        ]);
+		$user = User::find($user_id);
+		if ($user) {
+			$user->forceDelete();
+		} else {
+			return response()->json(['status' => '404', 'message' => 'User not found'], 404);
+		}
+		return response()->json(['status' => '200']);
     }
-
-    public function tokens(Request $request)
-    {
-        $tokens = $request->user()->tokens;
-
-        return response()->json(
-            [
-                "tokens" => $tokens
-            ]
-        );
+    public function delete_soft(Request $request){
+        $user_id = $request->id;
+		UsersAndRoles::where('user_id', $user_id)->delete();
+		User::find($user_id)->delete();
+		return response()->json(['status' => '200']);
     }
-
-    public function outAll(Request $request)
-    {
-        $userTokens = $request->user()->tokens;
-        foreach ($userTokens as $token) {
-            $token->revoke();
-        }
-
-        return response()->json(["All tokens is logout"], 200);
+    public function restore(Request $request){
+        $user_id = $request->id;
+		UsersAndRoles::withTrashed()->where('user_id', $user_id)->restore();
+		User::withTrashed()->find($user_id)->restore();
+		return response()->json(['status' => '200']);
     }
 }

@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Roles extends Model
+class Role extends Model
 {
     use HasFactory, SoftDeletes;
 
@@ -22,10 +22,10 @@ class Roles extends Model
     public function permissions() {
         $role_id = $this->id;
 
-        $permissions_id = RolesAndPermissions::select('permission_id')->where('role_id', $role_id)->get();
+        $permissions_id = RoleAndPermission::select('permission_id')->where('role_id', $role_id)->get();
 
         $permissions = $permissions_id->map(function ($id) {
-            return Permissions::where('id', $id->permission_id)->first();
+            return Permission::where('id', $id->permission_id)->first();
         });
 
         return $permissions;

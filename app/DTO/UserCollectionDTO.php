@@ -5,6 +5,7 @@
     use App\Models\User;
 
     class UserCollectionDTO {
+        public $users;
         public function __construct()
         {
             $users = User::all();

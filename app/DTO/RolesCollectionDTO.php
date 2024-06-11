@@ -6,6 +6,7 @@ use App\DTO\RoleDTO;
 
 class RolesCollectionDTO
 {
+    public $roles;
     public function __construct($roles)
     {
         $this->roles = $roles->map(function ($role) {
