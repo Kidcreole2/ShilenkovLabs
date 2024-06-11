@@ -3,7 +3,6 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Middleware\AuthCheck;
-use Illuminate\Http\Request;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,5 +30,5 @@ Route::prefix('auth')->group(function () {
         Route::get('tokens', [UserController::class, "tokens"]);
 
         Route::post('out_all', [UserController::class, "outAll"]);
-    });
+   });
 });
