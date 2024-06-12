@@ -13,7 +13,7 @@ use Laravel\Passport\Token;
 use App\DTO\UserDTO;
 use Carbon\Carbon;
 
-class UserController extends Controller
+class MainController extends Controller
 {
     public function auth(Auth $request)
     {

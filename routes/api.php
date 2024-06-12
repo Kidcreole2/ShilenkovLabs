@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\UserController;
+use App\Http\Controllers\MainController;
 use App\Http\Middleware\AuthCheck;
 
 /*
@@ -17,18 +17,18 @@ use App\Http\Middleware\AuthCheck;
 
 Route::prefix('auth')->group(function () {
 
-    Route::post('login', [UserController::class, "auth"])->name('login');
+    Route::post('login', [MainController::class, "auth"])->name('login');
 
-    Route::post('register', [UserController::class, "registration"])->middleware(AuthCheck::class);
+    Route::post('register', [MainController::class, "registration"])->middleware(AuthCheck::class);
 
     Route::middleware('auth:api')->group(function () {
 
-        Route::get('me', [UserController::class, "me"])->name('me');
+        Route::get('me', [MainController::class, "me"])->name('me');
 
-        Route::post('out', [UserController::class, "out"]);
+        Route::post('out', [MainController::class, "out"]);
 
-        Route::get('tokens', [UserController::class, "tokens"]);
+        Route::get('tokens', [MainController::class, "tokens"]);
 
-        Route::post('out_all', [UserController::class, "outAll"]);
+        Route::post('out_all', [MainController::class, "outAll"]);
    });
 });
