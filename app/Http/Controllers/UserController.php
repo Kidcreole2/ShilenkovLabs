@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use app\DTO\UserCollectionDTO;
 use App\Http\Requests\UpdateUserRequest;
 use App\Http\Requests\UserRequest;
-use App\Models\Role;
+use App\Models\Roles;
 use App\Models\User;
 use App\Models\UsersAndRoles;
 use Illuminate\Http\Request;
@@ -24,7 +24,7 @@ class UserController extends Controller
         $roles_id = UsersAndRoles::select('role_id')->where('user_id', $user_id)->get();
 
     	$roles = $roles_id->map(function($id) {
-    		return Role::where('id', $id->role_id)->first();
+    		return Roles::where('id', $id->role_id)->first();
     	});
 
     	return response()->json($roles);

@@ -2,28 +2,28 @@
 
 namespace App\Http\Controllers;
 
-use app\DTO\RolesCollectionDTO;
+use App\DTO\RolesCollectionDTO;
 use App\Http\Requests\Auth;
 use App\Http\Requests\CreateRoleRequest;
 use App\Http\Requests\UpdateRoleRequest;
-use App\Models\Role;
+use App\Models\Roles;
 use Illuminate\Http\Request;
 
 class RoleController extends Controller
 {
     public function getList(Request $request){
-        $roles = new RolesCollectionDTO(Role::all());
+        $roles = new RolesCollectionDTO(Roles::all());
         return response()->json($roles->roles);
     }
     public function getById(Request $request) {
-        $role = Role::find($request->id);
+        $role = Roles::find($request->id);
         return response()->json($role);
     }
     public function create(CreateRoleRequest $request) {
         $user = Auth::id();
         $role_data = $request->createDTO();
 
-        $new_role = Role::create([
+        $new_role = Roles::create([
             'name' => $role_data->name,
             'description' => $role_data->description,
             'encryption' => $role_data->encryption,
@@ -33,7 +33,7 @@ class RoleController extends Controller
         return response()->json($new_role);
     }
     public function update(UpdateRoleRequest $request){
-        $role = Role::find($request->id);
+        $role = Roles::find($request->id);
 
         $role->update([
             'name' => $request->input('name'),
@@ -48,7 +48,7 @@ class RoleController extends Controller
             return response()->json(['error' => "You can't remove the admin"]);
         }
         
-        $role = Role::withTrashed()->find($role_id);
+        $role = Roles::withTrashed()->find($role_id);
         $role->forceDelete();
 
         return response()->json(['status' => '200']);
@@ -59,7 +59,7 @@ class RoleController extends Controller
             return response()->json(['error' => "You can't remove the admin"]);
         }
 
-        $role = Role::find($role_id);
+        $role = Roles::find($role_id);
         if(!$role) {
             return response()->json(['error' => "The role with this id was not found"]);
         }
@@ -73,7 +73,7 @@ class RoleController extends Controller
         return response()->json(['status' => '200']);
     }
     public function restore(UpdateRoleRequest $request) {
-        $role = Role::withTrashed()->find($request->id);
+        $role = Roles::withTrashed()->find($request->id);
 
         $role->restore();
         $role->deleted_by = null;

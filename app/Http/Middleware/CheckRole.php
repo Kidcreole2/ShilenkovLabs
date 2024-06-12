@@ -2,13 +2,14 @@
 
 namespace App\Http\Middleware;
 
-use App\Models\Permission;
-use App\Models\Role;
-use App\Models\RoleAndPermission;
+use App\Models\Permissions;
+use App\Models\Roles;
+use App\Models\RolesAndPermissions;
 use App\Models\User;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response;
 
 use function Laravel\Prompts\error;
@@ -25,8 +26,8 @@ class CheckRole
         if (Auth::user()) {
             $user_roles = User::find(Auth::id())->roles();
 
-            $permission_id = Permission::where('name', $permission)->first()->id;
-            $permission_roles = RoleAndPermission::where('permission_id', $permission_id)->get();
+            $permission_id = Permissions::where('name', $permission)->first()->id;
+            $permission_roles = RolesAndPermissions::where('permission_id', $permission_id)->get();
 
             foreach ($user_roles as $role) {
                 if ($role->id == 1) {
