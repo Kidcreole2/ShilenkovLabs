@@ -48,7 +48,7 @@ class PermissionController extends Controller
 
         return response()->json(['status' => '200']);
     }
-    public function delete_soft(UpdatePermissionRequest $request) {
+    public function deleteSoft(UpdatePermissionRequest $request) {
         $permission = Permission::find($request->id);
 
         $user = $request->user()->id;

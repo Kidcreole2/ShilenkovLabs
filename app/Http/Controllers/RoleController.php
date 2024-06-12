@@ -53,7 +53,7 @@ class RoleController extends Controller
 
         return response()->json(['status' => '200']);
     }
-    public function deletesoft(UpdateRoleRequest $request) {
+    public function deleteSoft(UpdateRoleRequest $request) {
         $role_id = $request->id;
         if($role_id == 1) {
             return response()->json(['error' => "You can't remove the admin"]);

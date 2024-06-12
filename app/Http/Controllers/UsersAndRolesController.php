@@ -2,20 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\Auth;
 use App\Http\Requests\CreateUsersAndRolesRequest;
-use App\Http\Requests\Registration;
 use App\Http\Requests\UpdateRoleRequest;
 use App\Http\Requests\UpdateUsersAndRolesRequest;
-use App\Models\User;
 use App\Models\UsersAndRoles;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Log;
-use Laravel\Passport\Sanctum;
-use Laravel\Passport\Token;
-use App\DTO\UserDTO;
-use Carbon\Carbon;
 
 class UsersAndRolesController extends Controller
 {
@@ -48,7 +38,7 @@ class UsersAndRolesController extends Controller
 
         return response()->json(['status' => '200']);
     }
-    public function delete_soft(UpdateRoleRequest $request) {
+    public function deleteSoft(UpdateRoleRequest $request) {
         $user_id = $request->id;
         $role_id = $request->role_id;
 

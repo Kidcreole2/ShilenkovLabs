@@ -3,11 +3,14 @@
 namespace App\Http\Controllers;
 
 use app\DTO\UserCollectionDTO;
+use App\Http\Requests\UpdateUserRequest;
 use App\Http\Requests\UserRequest;
 use App\Models\Role;
 use App\Models\User;
 use App\Models\UsersAndRoles;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -26,7 +29,7 @@ class UserController extends Controller
 
     	return response()->json($roles);
     }
-    public function give(Request $request){
+    public function assign(Request $request){
         $user = UsersAndRoles::where('user_id', $request->id)->first();
 		$role = $request->role;
 
@@ -47,7 +50,7 @@ class UserController extends Controller
 		}
 		return response()->json(['status' => '200']);
     }
-    public function delete_soft(Request $request){
+    public function deleteSoft(Request $request){
         $user_id = $request->id;
 		UsersAndRoles::where('user_id', $user_id)->delete();
 		User::find($user_id)->delete();
@@ -59,4 +62,39 @@ class UserController extends Controller
 		User::withTrashed()->find($user_id)->restore();
 		return response()->json(['status' => '200']);
     }
+
+	public function updateUser(UpdateUserRequest $request)
+	{
+		$new_pass = $request->new_password;
+		$new_email = $request->new_email;
+		$new_birthday = $request->new_birthday;
+		$new_username = $request->new_username;
+
+		$user = User::find(Auth::id());
+		if (!$user || !Hash::check($request->old_password, $user->password)) {
+			return response()->json(['message' => 'Old password is incorrect'], 401);
+		}
+		if ($new_pass != '') {
+			$user->update([
+				'password' => $new_pass,
+			]);
+			$user->token()->revoke();
+		}
+		if ($new_email != '') {
+			$user->update([
+				'email' => $new_email,
+			]);
+		}
+		if ($new_birthday != '') {
+			$user->update([
+				'birthday' => $new_birthday,
+			]);
+		}
+		if ($new_username != '') {
+			$user->update([
+				'username' => $new_username,
+			]);
+		}
+		return response()->json(['status' => '200']);
+	}
 }
