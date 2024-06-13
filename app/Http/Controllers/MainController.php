@@ -29,7 +29,7 @@ class MainController extends Controller
 
         $userActiveTokens = $user->tokens()->where('revoked', false);
         $userTokenCount = $userActiveTokens->count();
-        dd($userTokenCount);
+        // dd($userTokenCount);
 
         while ($userTokenCount >= env('MAX_ACTIVE_TOKENS', 3)) {
             $oldestToken = $userActiveTokens->orderBy('created_at', 'asc')->first();

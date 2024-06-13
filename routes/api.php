@@ -44,45 +44,45 @@ Route::prefix('ref')->group(function () {
 
     Route::prefix('policy')->group(function () {
         Route::prefix('role')->group(function () {
-            Route::get('/', [RoleController::class, "getList"])->middleware('App\Http\Middleware\CheckRole:get-list-role');
-            Route::get('/{id}', [RoleController::class, "getById"])->middleware('CheckRole:read-role');
-            Route::post('', [RoleController::class, "create"])->middleware('CheckRole:create-role');
-            Route::put('/{id}', [RoleController::class, "update"])->middleware('CheckRole:update-role');
-            Route::delete('/{id}', [RoleController::class, "delete"])->middleware('CheckRole:delete-role');
-            Route::delete('/{id}/soft', [RoleController::class, "deleteSoft"])->middleware('CheckRole:delete-role');
-            Route::post('/{id}/restore', [RoleController::class, "restore"])->middleware('CheckRole:restore-role');
+            Route::get('/', [RoleController::class, "getList"])->middleware('App\Http\Middleware\App\Http\Middleware\CheckRole:get-list-role');
+            Route::get('/{id}', [RoleController::class, "getById"])->middleware('App\Http\Middleware\CheckRole:read-role');
+            Route::post('', [RoleController::class, "create"])->middleware('App\Http\Middleware\CheckRole:create-role');
+            Route::put('/{id}', [RoleController::class, "update"])->middleware('App\Http\Middleware\CheckRole:update-role');
+            Route::delete('/{id}', [RoleController::class, "delete"])->middleware('App\Http\Middleware\CheckRole:delete-role');
+            Route::delete('/{id}/soft', [RoleController::class, "deleteSoft"])->middleware('App\Http\Middleware\CheckRole:delete-role');
+            Route::post('/{id}/restore', [RoleController::class, "restore"])->middleware('App\Http\Middleware\CheckRole:restore-role');
 
-            Route::get('/{id}/permission', [RolesAndPermissionsController::class, 'get'])->middleware('CheckRole:read-role');
-            Route::get('/{id}/permission/{permission_id}', [RolesAndPermissionsController::class, 'assign'])->middleware('CheckRole:update-role');
-            Route::delete('/{id}/permission/{permission_id}', [RolesAndPermissionsController::class, 'delete'])->middleware('CheckRole:delete-role');
-            Route::delete('/{id}/permission/{permission_id}/soft', [RolesAndPermissionsController::class, 'deleteSoft'])->middleware('CheckRole:delete-role');
-            Route::post('/{id}/permission/{permission_id}/restore', [RolesAndPermissionsController::class, 'restore'])->middleware('CheckRole:restore-role');
+            Route::get('/{id}/permission', [RolesAndPermissionsController::class, 'get'])->middleware('App\Http\Middleware\CheckRole:read-role');
+            Route::get('/{id}/permission/{permission_id}', [RolesAndPermissionsController::class, 'assign'])->middleware('App\Http\Middleware\CheckRole:update-role');
+            Route::delete('/{id}/permission/{permission_id}', [RolesAndPermissionsController::class, 'delete'])->middleware('App\Http\Middleware\CheckRole:delete-role');
+            Route::delete('/{id}/permission/{permission_id}/soft', [RolesAndPermissionsController::class, 'deleteSoft'])->middleware('App\Http\Middleware\CheckRole:delete-role');
+            Route::post('/{id}/permission/{permission_id}/restore', [RolesAndPermissionsController::class, 'restore'])->middleware('App\Http\Middleware\CheckRole:restore-role');
         });
 
         Route::prefix('permission')->group(function () {
-            Route::get('/', [PermissionController::class, "getList"])->middleware('CheckRole:get-list-permission');
-            Route::get('/{id}', [PermissionController::class, "getById"])->middleware('CheckRole:read-permission');
-            Route::post('', [PermissionController::class, "create"])->middleware('CheckRole:create-permission');
-            Route::put('/{id}', [PermissionController::class, "update"])->middleware('CheckRole:update-permission');
-            Route::delete('/{id}', [PermissionController::class, "delete"])->middleware('CheckRole:delete-permission');
-            Route::delete('/{id}/soft', [PermissionController::class, "deleteSoft"])->middleware('CheckRole:delete-permission');
-            Route::post('/{id}/restore', [PermissionController::class, "restore"])->middleware('CheckRole:restore-permission');
+            Route::get('/', [PermissionController::class, "getList"])->middleware('App\Http\Middleware\CheckRole:get-list-permission');
+            Route::get('/{id}', [PermissionController::class, "getById"])->middleware('App\Http\Middleware\CheckRole:read-permission');
+            Route::post('', [PermissionController::class, "create"])->middleware('App\Http\Middleware\CheckRole:create-permission');
+            Route::put('/{id}', [PermissionController::class, "update"])->middleware('App\Http\Middleware\CheckRole:update-permission');
+            Route::delete('/{id}', [PermissionController::class, "delete"])->middleware('App\Http\Middleware\CheckRole:delete-permission');
+            Route::delete('/{id}/soft', [PermissionController::class, "deleteSoft"])->middleware('App\Http\Middleware\CheckRole:delete-permission');
+            Route::post('/{id}/restore', [PermissionController::class, "restore"])->middleware('App\Http\Middleware\CheckRole:restore-permission');
         });
 
     });
 
     Route::prefix('user')->group(function () {
-        Route::get('/', [UserController::class, "getUsers"])->middleware('CheckRole:get-list-user');
-        Route::get('/{id}/role', [UserController::class, "getRoles"])->middleware('CheckRole:read-user');
-        Route::post('/{id}/role', [UsersAndRolesController::class, "assign"])->middleware('CheckRole:read-user');
+        Route::get('/', [UserController::class, "getUsers"])->middleware('App\Http\Middleware\CheckRole:get-list-user');
+        Route::get('/{id}/role', [UserController::class, "getRoles"])->middleware('App\Http\Middleware\CheckRole:read-user');
+        Route::post('/{id}/role', [UsersAndRolesController::class, "assign"])->middleware('App\Http\Middleware\CheckRole:read-user');
         Route::put('updateUser', [UserController::class, 'updateUser'])->middleware('CheckRo    le:read-user');
-        Route::delete('{id}/hard', [UserController::class, 'delete'])->middleware('CheckRole:delete-user');
-        Route::delete('{id}/soft', [UserController::class, 'deleteSoft'])->middleware('CheckRole:delete-user');
-        Route::post('{id}/restore', [UserController::class, 'restore'])->middleware('CheckRole:restore-user');
-        Route::put('{id}/changeUserRole', [UserController::class, 'assign'])->middleware('CheckRole:update-user');
-        Route::delete('/{id}/role/{role_id}', [UsersAndRolesController::class, "delete"])->middleware('CheckRole:delete-user');
-        Route::delete('/{id}/role/{role_id}/soft', [UsersAndRolesController::class, "deleteSoft"])->middleware('CheckRole:delete-user');
-        Route::post('/{id}/role/{role_id}/restore', [UsersAndRolesController::class, "restore"])->middleware('CheckRole:delete-user');
+        Route::delete('{id}/hard', [UserController::class, 'delete'])->middleware('App\Http\Middleware\CheckRole:delete-user');
+        Route::delete('{id}/soft', [UserController::class, 'deleteSoft'])->middleware('App\Http\Middleware\CheckRole:delete-user');
+        Route::post('{id}/restore', [UserController::class, 'restore'])->middleware('App\Http\Middleware\CheckRole:restore-user');
+        Route::put('{id}/changeUserRole', [UserController::class, 'assign'])->middleware('App\Http\Middleware\CheckRole:update-user');
+        Route::delete('/{id}/role/{role_id}', [UsersAndRolesController::class, "delete"])->middleware('App\Http\Middleware\CheckRole:delete-user');
+        Route::delete('/{id}/role/{role_id}/soft', [UsersAndRolesController::class, "deleteSoft"])->middleware('App\Http\Middleware\CheckRole:delete-user');
+        Route::post('/{id}/role/{role_id}/restore', [UsersAndRolesController::class, "restore"])->middleware('App\Http\Middleware\CheckRole:delete-user');
     });
 });
 
