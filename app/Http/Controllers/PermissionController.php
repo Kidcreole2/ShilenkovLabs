@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use app\DTO\PermissionsCollectionDTO;
-use App\Http\Requests\Auth;
+use App\DTO\PermissionsCollectionDTO;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\CreatePermissionRequest;
 use App\Http\Requests\UpdatePermissionRequest;
 use App\Models\Permissions;

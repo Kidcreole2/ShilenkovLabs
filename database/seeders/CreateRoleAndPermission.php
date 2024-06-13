@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\RoleAndPermission;
+use App\Models\RolesAndPermissions;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -44,7 +44,7 @@ class CreateRoleAndPermission extends Seeder
         ];
 
         foreach ($roleAndPermissions as $roleAndPermission) {
-            RoleAndPermission::create($roleAndPermission);
+            RolesAndPermissions::create($roleAndPermission);
         }
     }
 }

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use app\DTO\UserCollectionDTO;
+use App\DTO\UserCollectionDTO;
 use App\Http\Requests\UpdateUserRequest;
 use App\Http\Requests\UserRequest;
 use App\Models\Roles;

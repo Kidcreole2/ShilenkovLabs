@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\Permission;
+use App\Models\Permissions;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -38,7 +38,7 @@ class CreatePermissions extends Seeder
         ];
 
         foreach($permissions as $permission) {
-            Permission::create($permission);
+            Permissions::create($permission);
         }
     }
 }

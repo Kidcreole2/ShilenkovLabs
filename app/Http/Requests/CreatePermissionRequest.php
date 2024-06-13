@@ -27,8 +27,8 @@ class CreatePermissionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|unique:Role',
-            'encryption' => 'required|unique:Role'
+            'name' => 'required|unique:Permissions',
+            'encryption' => 'required|unique:Permissions'
         ];
     }
 

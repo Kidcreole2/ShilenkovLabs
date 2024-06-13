@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\DTO\RolesCollectionDTO;
-use App\Http\Requests\Auth;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\CreateRoleRequest;
 use App\Http\Requests\UpdateRoleRequest;
 use App\Models\Roles;

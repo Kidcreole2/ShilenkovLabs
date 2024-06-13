@@ -63,8 +63,7 @@ class RolesAndPermissionsController extends Controller
         $role_id = $request->id;
         $permission_id = $request->permission_id;
 
-        $role_permission = RolesAndPermissions::where('role_id', $role_id)->where('permission_id', $permission_id)->first();
-
+        $role_permission = RolesAndPermissions::withTrashed()->where('role_id', $role_id)->where('permission_id', $permission_id)->first();
         $role_permission->restore();
         $role_permission->deleted_by = null;
         $role_permission->save();
