@@ -44,7 +44,7 @@ Route::prefix('ref')->group(function () {
 
     Route::prefix('policy')->group(function () {
         Route::prefix('role')->group(function () {
-            Route::get('/', [RoleController::class, "getList"])->middleware('App\Http\Middleware\App\Http\Middleware\CheckRole:get-list-role');
+            Route::get('/', [RoleController::class, "getList"])->middleware('App\Http\Middleware\CheckRole:get-list-role');
             Route::get('/{id}', [RoleController::class, "getById"])->middleware('App\Http\Middleware\CheckRole:read-role');
             Route::post('', [RoleController::class, "create"])->middleware('App\Http\Middleware\CheckRole:create-role');
             Route::put('/{id}', [RoleController::class, "update"])->middleware('App\Http\Middleware\CheckRole:update-role');
