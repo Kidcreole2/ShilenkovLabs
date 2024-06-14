@@ -6,6 +6,7 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\RolesAndPermissionsController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\LogsController;
 use App\Http\Controllers\UsersAndRolesController;
 use App\Http\Middleware\AuthCheck;
 use Illuminate\Http\Request;
@@ -44,7 +45,7 @@ Route::prefix('ref')->group(function () {
 
     Route::prefix('policy')->group(function () {
         Route::prefix('role')->group(function () {
-            Route::get('/', [RoleController::class, "getList"])->middleware('App\Http\Middleware\App\Http\Middleware\CheckRole:get-list-role');
+            Route::get('/', [RoleController::class, "getList"])->middleware('App\Http\Middleware\CheckRole:get-list-role');
             Route::get('/{id}', [RoleController::class, "getById"])->middleware('App\Http\Middleware\CheckRole:read-role');
             Route::post('', [RoleController::class, "create"])->middleware('App\Http\Middleware\CheckRole:create-role');
             Route::put('/{id}', [RoleController::class, "update"])->middleware('App\Http\Middleware\CheckRole:update-role');
@@ -83,5 +84,10 @@ Route::prefix('ref')->group(function () {
         Route::delete('/{id}/role/{role_id}', [UsersAndRolesController::class, "delete"])->middleware('App\Http\Middleware\CheckRole:delete-user');
         Route::delete('/{id}/role/{role_id}/soft', [UsersAndRolesController::class, "deleteSoft"])->middleware('App\Http\Middleware\CheckRole:delete-user');
         Route::post('/{id}/role/{role_id}/restore', [UsersAndRolesController::class, "restore"])->middleware('App\Http\Middleware\CheckRole:delete-user');
+    });
+
+    Route::prefix('log')->group(function () {
+        Route::get('{model}/{id}/story', [LogsController::class, "getLogs"])->middleware('CheckRole:get-story-user');
+        Route::get('{id}/restore', [LogsController::class, "restoreRow"]);
     });
 });

@@ -6,12 +6,15 @@ use App\Http\Requests\CreateUsersAndRolesRequest;
 use App\Http\Requests\UpdateRoleRequest;
 use App\Http\Requests\UpdateUsersAndRolesRequest;
 use App\Models\UsersAndRoles;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class UsersAndRolesController extends Controller
 {
     
     public function assign(CreateUsersAndRolesRequest $request) {
         $user_id = $request->id;
+        $user = Auth::id();
 
         $role_id = $request->input('role_id');
 
@@ -21,44 +24,104 @@ class UsersAndRolesController extends Controller
             return response()->json(['error' => 'The user already has such a role']);
         }
 
-        UsersAndRoles::create([
-            'user_id' => $user_id,
-            'role_id' => $role_id,
-            'created_by' => $request->user()->id
-        ]);
+        try {
+            DB::beginTransaction();
 
-        return response()->json(['status' => '200']);
+            $UAR = UsersAndRoles::create([
+                'user_id' => $user_id,
+                'role_id' => $role_id,
+                'created_by' => $request->user()->id
+            ]);
+
+            $Log = new LogsController;
+            $Log->createLogs('user_and_roles', 'create', $UAR->id, null, $UAR, $user);
+
+            DB::commit();
+
+            return response()->json(['status' => '200']);
+        }
+        catch (\Exception $err) {
+            DB::rollback();
+            throw $err;
+        }
     }
-    public function delete(UpdateUsersAndRolesRequest $request) {
-        $user_id = $request->id;
-        $role_id = $request->role_id;
+    public function delete(UpdateUsersAndRolesRequest $request){
 
-        $user_role = UsersAndRoles::withTrashed()->where('user_id', $user_id)->where('role_id', $role_id);
-        $user_role->forceDelete();
+        try {
+            DB::beginTransaction();
 
-        return response()->json(['status' => '200']);
+            $user = $request->user()->id;
+            $user_id = $request->id;
+            $role_id = $request->role_id;
+
+            $user_role = UsersAndRoles::withTrashed()->where('user_id', $user_id)->where('role_id', $role_id);
+
+            $Log = new LogsController;
+            $Log->createLogs('user_and_roles', 'hardDelete', $user_role->id, $user_role, null, $user);
+
+            $user_role->forceDelete();
+            
+            DB::commit();
+
+            return response()->json(['status' => '200']);
+        }
+        catch (\Exception $err) {
+            DB::rollback();
+            throw $err;
+        }
     }
-    public function deleteSoft(UpdateRoleRequest $request) {
-        $user_id = $request->id;
-        $role_id = $request->role_id;
+    public function deleteSoft(UpdateRoleRequest $request){
 
-        $user_role = UsersAndRoles::where('user_id', $user_id)->where('role_id', $role_id);
-        $user_role->deleted_by = $request->user()->id;
-        $user_role->delete();
-        $user_role->save();
+        try {
+            DB::beginTransaction();
 
-        return response()->json(['status' => '200']);
+            $user = $request->user()->id;
+            $user_id = $request->id;
+            $role_id = $request->role_id;
+
+            $user_role = UsersAndRoles::where('user_id', $user_id)->where('role_id', $role_id);
+            $user_role->deleted_by = $user;
+
+            $Log = new LogsController;
+            $Log->createLogs('roles_and_permission', 'softDelete', $user_role->id, $user_role, null, $user);
+
+            $user_role->delete();
+            $user_role->save();
+
+            DB::commit();
+
+            return response()->json(['status' => '200']);
+        }
+        catch (\Exception $err) {
+            DB::rollback();
+            throw $err;
+        }
     }
-    public function restore(UpdateRoleRequest $request) {
-        $user_id = $request->id;
-        $role_id = $request->role_id;
+    public function restore(UpdateRoleRequest $request){
 
-        $user_role = UsersAndRoles::withTrashed()->where('user_id', $user_id)->where('role_id', $role_id);
+        try {
+            DB::beginTransaction();
 
-        $user_role->restore();
-        $user_role->deleted_by = null;
-        $user_role->save();
+            $user = $request->user()->id;
+            $user_id = $request->id;
+            $role_id = $request->role_id;
 
-        return response()->json(['status' => '200']);
+            $user_role = UsersAndRoles::withTrashed()->where('user_id', $user_id)->where('role_id', $role_id)->first();
+
+            $Log = new LogsController();
+			$Log->createLogs('roles_and_permissions', 'restore', $user_role->id, null, $user_role, $user);
+
+            $user_role->restore();
+            $user_role->deleted_by = null;
+            $user_role->save();
+
+            DB::commit();
+
+            return response()->json(['status' => '200']);
+        }
+        catch (\Exception $err) {
+            DB::rollback();
+            throw $err;
+        }
     }
 }
