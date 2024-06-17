@@ -75,7 +75,7 @@ Route::prefix('ref')->group(function () {
         Route::get('/', [UserController::class, "getUsers"])->middleware('App\Http\Middleware\CheckRole:get-list-user');
         Route::get('/{id}/role', [UserController::class, "getRoles"])->middleware('App\Http\Middleware\CheckRole:read-user');
         Route::post('/{id}/role', [UsersAndRolesController::class, "assign"])->middleware('App\Http\Middleware\CheckRole:read-user');
-        Route::put('updateUser', [UserController::class, 'updateUser'])->middleware('CheckRo    le:read-user');
+        Route::put('updateUser', [UserController::class, 'updateUser'])->middleware('App\Http\Middleware\CheckRole:read-user');
         Route::delete('{id}/hard', [UserController::class, 'delete'])->middleware('App\Http\Middleware\CheckRole:delete-user');
         Route::delete('{id}/soft', [UserController::class, 'deleteSoft'])->middleware('App\Http\Middleware\CheckRole:delete-user');
         Route::post('{id}/restore', [UserController::class, 'restore'])->middleware('App\Http\Middleware\CheckRole:restore-user');
@@ -85,49 +85,3 @@ Route::prefix('ref')->group(function () {
         Route::post('/{id}/role/{role_id}/restore', [UsersAndRolesController::class, "restore"])->middleware('App\Http\Middleware\CheckRole:delete-user');
     });
 });
-
-// Route::prefix('ref')->group(function () {
-
-//     Route::prefix('policy')->group(function () {
-//         Route::prefix('role')->group(function () {
-//             Route::get('/', [RoleController::class, "getList"]);
-//             Route::get('/{id}', [RoleController::class, "getById"]);
-//             Route::post('', [RoleController::class, "create"]);
-//             Route::put('/{id}', [RoleController::class, "update"]);
-//             Route::delete('/{id}', [RoleController::class, "delete"]);
-//             Route::delete('/{id}/soft', [RoleController::class, "deleteSoft"]);
-//             Route::post('/{id}/restore', [RoleController::class, "restore"]);
-
-//             Route::get('/{id}/permission', [RolesAndPermissionsController::class, 'get']);
-//             Route::get('/{id}/permission/{permission_id}', [RolesAndPermissionsController::class, 'assign']);
-//             Route::delete('/{id}/permission/{permission_id}', [RolesAndPermissionsController::class, 'delete']);
-//             Route::delete('/{id}/permission/{permission_id}/soft', [RolesAndPermissionsController::class, 'deleteSoft']);
-//             Route::post('/{id}/permission/{permission_id}/restore', [RolesAndPermissionsController::class, 'restore']);
-//         });
-
-//         Route::prefix('permission')->group(function () {
-//             Route::get('/', [PermissionController::class, "getList"]);
-//             Route::get('/{id}', [PermissionController::class, "getById"]);
-//             Route::post('', [PermissionController::class, "create"]);
-//             Route::put('/{id}', [PermissionController::class, "update"]);
-//             Route::delete('/{id}', [PermissionController::class, "delete"]);
-//             Route::delete('/{id}/soft', [PermissionController::class, "deleteSoft"]);
-//             Route::post('/{id}/restore', [PermissionController::class, "restore"]);
-//         });
-
-//     });
-
-//     Route::prefix('user')->group(function () {
-//         Route::get('/', [UserController::class, "getUsers"]);
-//         Route::get('/{id}/role', [UserController::class, "getRoles"]);
-//         Route::post('/{id}/role', [UsersAndRolesController::class, "assign"]);
-//         Route::put('updateUser', [UserController::class, 'updateUser']);
-//         Route::delete('{id}/hard', [UserController::class, 'delete']);
-//         Route::delete('{id}/soft', [UserController::class, 'deleteSoft']);
-//         Route::post('{id}/restore', [UserController::class, 'restore']);
-//         Route::put('{id}/changeUserRole', [UserController::class, 'assign']);
-//         Route::delete('/{id}/role/{role_id}', [UsersAndRolesController::class, "delete"]);
-//         Route::delete('/{id}/role/{role_id}/soft', [UsersAndRolesController::class, "deleteSoft"]);
-//         Route::post('/{id}/role/{role_id}/restore', [UsersAndRolesController::class, "restore"]);
-//     });
-// });

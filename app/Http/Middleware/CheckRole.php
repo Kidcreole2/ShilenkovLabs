@@ -22,34 +22,30 @@ class CheckRole
      */
     public function handle(Request $request, Closure $next, $permission): Response
     {
-        if (Auth::user()) {
+        if (Auth::check()) {
             $user_roles = User::find(Auth::id())->roles();
-            try{
-
-            }catch(Exteption $err){
-
-            }
-            if (!($permission_id = Permissions::where('name', $permission)->first()->id)){
-                return response()->json(['error' => ""], 403);
-            }
-            // $permission_id = Permissions::where('name', $permission)->first()->id;
-            $permission_roles = RolesAndPermissions::where('permission_id', $permission_id)->get();
-
-            foreach ($user_roles as $role) {
-                if ($role->id == 1) {
-                    return $next($request);
-                }
-                else {
-                    foreach($permission_roles as $permission_role) {
-                        if($permission_role->role_id == $role->id) {
-                            return $next($request);
+            try {
+                $permission_id = Permissions::where('name', $permission)->first()->id;
+                $permission_roles = RolesAndPermissions::where('permission_id', $permission_id)->get();
+    
+                foreach ($user_roles as $role) {
+                    if ($role->id == 1) {
+                        return $next($request);
+                    }
+                    else {
+                        foreach($permission_roles as $permission_role) {
+                            if($permission_role->role_id == $role->id) {
+                                return $next($request);
+                            }
                         }
                     }
                 }
+                return response()->json(['error' => "the required role is missing"], 403);
             }
-            return response()->json(['error' => "the required role is missing"], 403);
+            catch (\Exception $err) {
+                return response()->json(['error' => "permission doesn't exist"], 403);
+            }
         }
-
         return response()->json(['error' => 'Forbidden'], 403);
     }
 }
