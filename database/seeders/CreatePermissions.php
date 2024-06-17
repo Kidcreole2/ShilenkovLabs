@@ -14,7 +14,7 @@ class CreatePermissions extends Seeder
     public function run(): void
     {
         $permissions = [
-            ['name' => 'get-list-user', 'description' => 'can get list of users', 'encryption' => '1', 'created_by' => '1'],
+            ['name' => 'get-list-user', 'description' => 'can get list of users', 'encryption' => 'get-list-user', 'created_by' => '1'],
             ['name' => 'read-user', 'description' => 'can read user', 'encryption' => '2', 'created_by' => '1'],
             ['name' => 'create-user', 'description' => 'can create user', 'encryption' => '3', 'created_by' => '1'],
             ['name' => 'update-user', 'description' => 'can update user', 'encryption' => '4', 'created_by' => '1'],

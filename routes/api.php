@@ -46,7 +46,7 @@ Route::prefix('ref')->group(function () {
         Route::prefix('role')->group(function () {
             Route::get('/', [RoleController::class, "getList"])->middleware('App\Http\Middleware\CheckRole:get-list-role');
             Route::get('/{id}', [RoleController::class, "getById"])->middleware('App\Http\Middleware\CheckRole:read-role');
-            Route::post('', [RoleController::class, "create"])->middleware('App\Http\Middleware\CheckRole:create-role');
+            Route::post('', [RoleController::class, "create"])->middleware('App\Http\Middleware\CheckRole:create-123');
             Route::put('/{id}', [RoleController::class, "update"])->middleware('App\Http\Middleware\CheckRole:update-role');
             Route::delete('/{id}', [RoleController::class, "delete"])->middleware('App\Http\Middleware\CheckRole:delete-role');
             Route::delete('/{id}/soft', [RoleController::class, "deleteSoft"])->middleware('App\Http\Middleware\CheckRole:delete-role');

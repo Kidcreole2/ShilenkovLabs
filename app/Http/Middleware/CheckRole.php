@@ -24,8 +24,15 @@ class CheckRole
     {
         if (Auth::user()) {
             $user_roles = User::find(Auth::id())->roles();
+            try{
 
-            $permission_id = Permissions::where('name', $permission)->first()->id;
+            }catch(Exteption $err){
+
+            }
+            if (!($permission_id = Permissions::where('name', $permission)->first()->id)){
+                return response()->json(['error' => ""], 403);
+            }
+            // $permission_id = Permissions::where('name', $permission)->first()->id;
             $permission_roles = RolesAndPermissions::where('permission_id', $permission_id)->get();
 
             foreach ($user_roles as $role) {
