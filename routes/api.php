@@ -87,7 +87,7 @@ Route::prefix('ref')->group(function () {
     });
 
     Route::prefix('log')->group(function () {
-        Route::get('{model}/{id}/story', [LogsController::class, "getLogs"])->middleware('CheckRole:get-story-user');
+        Route::get('{model}/{id}/story', [LogsController::class, "getLogs"])->middleware('App\Http\Middleware\CheckRole:get-story-user');
         Route::get('{id}/restore', [LogsController::class, "restoreRow"]);
     });
 });

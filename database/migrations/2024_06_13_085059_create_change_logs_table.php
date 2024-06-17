@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('change_logs', function (Blueprint $table) {
             $table->id();
             $table->string('table_name');
-            $table->string('action');
+            $table->string('action_name');
             $table->string('row_id');
             $table->string('value_before')->nullable();
             $table->string('value_after')->nullable();

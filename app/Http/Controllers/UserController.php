@@ -30,6 +30,16 @@ class UserController extends Controller
 
     	return response()->json($roles);
     }
+	public function changeRole(Request $request)
+	{
+		$user = UsersAndRoles::where('user_id', $request->id)->first();
+		$role = $request->role;
+
+		$user->update([
+			'role_id' => $role,
+		]);
+		return response()->json(['status' => '200']);
+	}
     public function assign(Request $request){
         $user = UsersAndRoles::where('user_id', $request->id)->first();
 		$role = $request->role;

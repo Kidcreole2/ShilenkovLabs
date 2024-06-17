@@ -11,7 +11,7 @@ class ChangeLogs extends Model
 
     protected $fillable = [
         'table_name',
-        'action',
+        'action_name',
         'row_id',
         'value_before',
         'value_after',

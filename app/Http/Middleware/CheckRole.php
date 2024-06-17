@@ -22,7 +22,7 @@ class CheckRole
      */
     public function handle(Request $request, Closure $next, $permission): Response
     {
-        if (Auth::user()) {
+        if (Auth::check()) {
             $user_roles = User::find(Auth::id())->roles();
 
             $permission_id = Permissions::where('name', $permission)->first()->id;
@@ -42,7 +42,6 @@ class CheckRole
             }
             return response()->json(['error' => "the required role is missing"], 403);
         }
-
         return response()->json(['error' => 'Forbidden'], 403);
     }
 }
