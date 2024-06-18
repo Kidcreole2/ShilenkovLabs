@@ -37,6 +37,7 @@ class LogsController extends Controller
     public function restoreRow(Request $request) {
         $log_id = $request->id;
         $user = $request->user();
+        DB::beginTransaction();
 
         try {
             $log = ChangeLogs::where('id', $log_id)->first();
