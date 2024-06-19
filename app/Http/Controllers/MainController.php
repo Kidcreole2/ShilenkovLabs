@@ -7,14 +7,9 @@ use App\Http\Requests\Registration;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Laravel\Passport\Passport;
-use Laravel\Passport\Token;
-use App\DTO\UserDTO;
 use App\Models\UsersAndRoles;
 use App\Models\VerifyCode;
 use Carbon\Carbon;
-use Error;
-use Illuminate\Auth\Events\Verified;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 
@@ -148,8 +143,8 @@ class MainController extends Controller
                 $now = Carbon::now();
                 $oldestCode = VerifyCode::where('user_id', $user->id)->oldest()->first();
                 $verify_code->count += 1;
-                if ($now->diffInSeconds($oldestCode->updated_at) <= 30) {
-                    return response()->json(['message' => 'You need to wait ' . 30 - $now->diffInSeconds($oldestCode->updated_at) . ' seconds'], 401);
+                if (-$now->diffInSeconds($oldestCode->updated_at) <= 30) {
+                    return response()->json(['message' => 'You need to wait ' . 30 + $now->diffInSeconds($oldestCode->updated_at) . ' seconds'], 401);
                 }
             }
 
@@ -177,12 +172,6 @@ class MainController extends Controller
         }
         $verify_code = VerifyCode::where('user_id', $user->id)->first();
         if ($code == $verify_code->code && Carbon::now() <= $verify_code->expires_at) {
-
-            if (env('MAX_ACTIVE_TOKENS') == 0) {
-                return response()->json([
-                    'message' => 'change env MAX_ACTIVE_TOKENS'
-                ], 401);
-            }
     
             $userActiveTokens = $user->tokens()->where('revoked', false);
             $userTokenCount = $userActiveTokens->count();
